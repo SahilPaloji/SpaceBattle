@@ -1,80 +1,126 @@
-var Bg,Bg1;
-var MainCraft,MainCraftImg;
-var EnemyCraft1,EnemyCraft1Img;
-var EnemyCraft2,EnemyCraft2Img;
-var BossCraft,BossCraftImg;
-
+var bg, enemy1,enemy2,boss,spacewar ;
+var enemyImage1, enemyImage2, bossImage,  MaincraftImage,
+backgroundImage;
+var laser, laserImg;
+var score = 0;
 
 
 
 function preload(){
-
-    Bg = loadImage("SpaceWar.jpg");
-
-    MainCraftImg = loadImage("MainCraft.png");
-    EnemyCraft1Img = loadImage("EnemySpaceCraft1.png");
-    EnemyCraft2Img = loadImage("EnemySpaceCraft2.png");
-    BossCraftImg = loadImage("Boss.png");
-
-}
-
-function setup(){
-    createCanvas(1400,1400);
-
-MainCraft = createSprite(700,580,50,50);
-MainCraft.addImage(MainCraftImg);
-MainCraft.scale = 0.2;
-
-
-//Bg1 = createSprite(0,0,10000,10000);
-//Bg1.addImage(Bg)
-
-
-
+  
+  backgroundImage = loadImage("SpaceWar.jpg");
+  enemyImage1 = loadImage("EnemySpaceCraft1.png");
+  enemyImage2 = loadImage("EnemySpaceCraft2.png");
+  bossImage = loadImage("Boss.png");
+  MaincraftImage= loadImage("MainCraft.png");
+  laserImg = loadImage("laser.png")
+  
+  
 }
 
 
 
-function draw(){
-    background(Bg);
+function setup() {
+  createCanvas(400, 400);
+  
+  //creating background
+  bg = createSprite(0,0,400,400);
+  bg.addImage(backgroundImage);
+  bg.scale = 2.5
+  
+  // creating bow to shoot arrow
+  Maincraft = createSprite(200,300,20,50);
+  Maincraft.addImage( MaincraftImage); 
+  Maincraft.scale = 0.1;
 
-enemy1();
-enemy2();
-boss();
-
-drawSprites();
-
-
-
-
-
-}
-function enemy1(){
-
-EnemyCraft1 = createSprite(200,300,50,50);
-EnemyCraft1.addImage(EnemyCraft1Img);
-EnemyCraft1.scale = 0.1;
-
- EnemyCraft1.velocityY = 2;
-
+  
+  
+    
 }
 
-function enemy2(){
+function draw() {
+ background(0);
+  // moving ground
+    bg.velocityY = -3 
 
-EnemyCraft2 = createSprite(1100,300,50,50);
-EnemyCraft2.addImage(EnemyCraft2Img);
-EnemyCraft2.scale = 0.15;
+    if (bg.y < 0){
+      bg.y = bg.height/2;
+   }
+  
+  
+   
+  //creating continous enemies
+  var select_craft = Math.round(random(1,3));
+  
+  if (World.frameCount % 100 == 0) {
+    if (select_craft == 1) {
+      enemy1();
+    } else if (select_craft == 2) {
+      enemy2();
+    } else if (select_craft == 3) {
+      enemy3();
+    } 
+  }  
 
-EnemyCraft2.velocityY = 2;
+  if(keyDown(RIGHT_ARROW)){
+    Maincraft.x = Maincraft.x +3;
+
+  }
+
+  if(keyDown(LEFT_ARROW)){
+    Maincraft.x = Maincraft.x -3;
+  }
+
+  if(keyDown("space")){
+     var cLaser = createLaser();
+    // cLaser.x = Maincraft.x;  
+    
+   }
+   
+
+    
+  drawSprites();
+
+  textSize(20);
+   stroke("red");
+   strokeWeight("white");
+  text("score : 0",30,50);
+}
+
+
+
+function enemy1() {
+  var ene1 = createSprite(Math.round(random(20, 370)),0, 10, 10);
+  ene1.addImage(enemyImage1);
+  ene1.velocityY = 3;
+  ene1.lifetime = 150;
+  ene1.scale = 0.1;
+}
+
+function enemy2() {
+  var ene2 = createSprite(Math.round(random(40, 370)),0, 10, 10);
+  ene2.addImage(enemyImage2);
+  ene2.velocityY = 3;
+  ene2.lifetime = 150;
+  ene2.scale = 0.1;
+}
+
+function enemy3() {
+  var ene3 = createSprite(Math.round(random(60, 370)),0, 10, 10);
+  ene3.addImage(bossImage);
+  ene3.velocityY= 3;
+  ene3.lifetime = 150;
+  ene3.scale = 0.1;
+}
+
+function createLaser(){
+
+  laser = createSprite(Maincraft.x,Maincraft.y,10,10);
+  laser.addImage(laserImg);
+  laser.scale = 0.1;
+
+  laser.velocityY = -2;
+  return laser;
 
 }
 
-function boss(){
-
-BossCraft = createSprite(700,100,50,50)
-BossCraft.addImage(BossCraftImg);
-BossCraft.scale = 0.4;
-
- BossCraft.velocityY = 1;
-
-}
